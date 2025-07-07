@@ -1,9 +1,12 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Button, StyleSheet } from "react-native";
+import { useAuth } from "../context/AuthContext";
 
-export default function ProfileScreen() {
+export default function Profile() {
+  const { logout } = useAuth();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>👤 Это экран профиля</Text>
+      <Button title="Выйти" onPress={logout} />
     </View>
   );
 }

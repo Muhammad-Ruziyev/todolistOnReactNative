@@ -10,6 +10,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import uuid from "react-native-uuid";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "expo-router";
 
 type Task = {
   id: string;
@@ -20,6 +22,23 @@ type Task = {
 export default function Index() {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
+
+  const { token, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !token) {
+      router.replace("/login"); // ⬅️ если нет токена — перекидываем
+    }
+  }, [token, isLoading]);
+
+  if (isLoading) {
+    return <Text>Загрузка...</Text>;
+  }
+
+  if (!token) {
+    return null; // ничего не рендерим, т.к. редирект в login
+  }
 
   useEffect(() => {
     const loadTasks = async () => {
